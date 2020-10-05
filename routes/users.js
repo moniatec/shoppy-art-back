@@ -78,7 +78,7 @@ router.post(
     })
 );
 
-//get all events for a user wiht userId=id passed on the params from the client side
+//get all items for a user wiht userId=id passed on the params from the client side
 router.get(
     "/:id/items",
     asyncHandler(async (req, res, next) => {
@@ -93,6 +93,24 @@ router.get(
 
         });
         res.json({ items });
+    })
+);
+
+//get all orders for a user wiht userId=id passed on the params from the client side
+router.get(
+    "/:id/orders",
+    asyncHandler(async (req, res, next) => {
+        const userId = parseInt(req.params.id, 10);
+        const orders = await User.findOne({
+            where: { id: userId },
+            include: [{
+                model: Order,
+                as: "orders",
+                order: [["time", "DESC"]],
+            }],
+
+        });
+        res.json({ orders });
     })
 );
 

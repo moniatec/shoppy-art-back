@@ -8,6 +8,14 @@ const db = require("../db/models");
 const { Op } = require("sequelize");
 const { Item, User, Order } = db;
 
+const orderNotFoundError = (id) => {
+    const err = Error("Order not found");
+    err.errors = [`Order with id of ${id} could not be found.`];
+    err.title = "Order not found.";
+    err.status = 404;
+    return err;
+};
+
 // get all orders 
 router.get(
     "/",
@@ -83,3 +91,25 @@ router.post(
         res.json({ order });
     })
 );
+
+//delete/cancel order with id passed on the params
+//this option is only available for the owner/user
+router.delete(
+    "/:id",
+    asyncHandler(async (req, res, next) => {
+        const order = await Order.findOne({
+            where: {
+                id: req.params.id,
+            },
+        });
+
+        if (order) {
+            await order.destroy();
+            res.json({ message: `Deleted order with id of ${req.params.id}.` });
+        } else {
+            next(orderNotFoundError(req.params.id));
+        }
+    })
+);
+
+module.exports = router;
