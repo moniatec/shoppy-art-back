@@ -6,7 +6,7 @@ const router = express.Router();
 const db = require("../db/models");
 
 const { Op } = require("sequelize");
-const { Item, User } = db;
+const { Item, User, Order } = db;
 
 // get all items 
 router.get(

@@ -2,11 +2,11 @@
     "name": "projects",
     "version": "1.0.0",
     "description": "",
-    "main": "./bin/www",
+    "main": "app.js",
     "scripts": {
         "start": "per-env",
         "start:development": "nodemon -r dotenv/config ./bin/www",
-        "start:production": "./bin/www"
+        "start:production": "node ./bin/www"
     },
     "keywords": [],
     "author": "",
@@ -26,5 +26,8 @@
         "dotenv-cli": "^3.1.0",
         "nodemon": "^2.0.2",
         "sequelize-cli": "^5.5.1"
+    },
+    "engines": {
+        "node": "12.x"
     }
 }
