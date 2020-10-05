@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       as: "owner",
       foreignKey: "ownerId",
     });
+    User.hasMany(models.Order, {
+      as: "user",
+      foreignKey: "userId",
+    });
   };
 
   User.prototype.validatePassword = function (password) {
