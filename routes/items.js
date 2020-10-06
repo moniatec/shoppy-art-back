@@ -90,3 +90,45 @@ router.delete(
         }
     })
 );
+
+//edit item(price) with id passed on params
+router.put(
+    "/:id",
+
+    asyncHandler(async (req, res, next) => {
+        const item = await Item.findOne({
+            where: {
+                id: req.params.id,
+            },
+        });
+
+        if (item) {
+            await item.update({ price: req.body.price }); //may need to add more to update for one item
+            res.json({ item });
+        } else {
+            next(itemNotFoundError(req.params.id));
+        }
+    })
+);
+
+//edit item(sold) with id passed on params
+router.put(
+    "/:id/sold",
+
+    asyncHandler(async (req, res, next) => {
+        const item = await Item.findOne({
+            where: {
+                id: req.params.id,
+            },
+        });
+
+        if (item) {
+            await item.update({ sold: true }); //may need to add more to update for one item
+            res.json({ item });
+        } else {
+            next(itemNotFoundError(req.params.id));
+        }
+    })
+);
+
+module.exports = router;

@@ -77,18 +77,46 @@ router.get(
 router.post(
     "/",
     asyncHandler(async (req, res) => {
-        const { userId } = req.body;
-        const parsedId = await parseInt(userId, 10);
-        const order = await Order.create({ userId: parsedId });
+        const { userId, itemId } = req.body;
+        const parsedUserId = await parseInt(userId, 10);
+        const parsedItemId = await parseInt(itemId, 10);
+        const order = await Order.create({ userId: parsedUserId });
 
-        // const item = await Event.findOne({
-        //     where: {
-        //         id: req.params.id,
-        //     },
-        // });
-        // await item.update({ sold: true, orderId: order.id });
+        const item = await Item.findOne({
+            where: {
+                id: parsedItemId,
+            },
+        });
+        await item.update({ sold: true, orderId: order.id });
 
         res.json({ order });
+    })
+);
+
+//edit item(sold) with id passed on params
+router.put(
+    "/:id",
+
+    asyncHandler(async (req, res, next) => {
+        const { itemId } = req.body;
+        const parsedItemId = await parseInt(itemId, 10);
+        const order = await Order.findOne({
+            where: {
+                id: req.params.id,
+            },
+        });
+
+        if (order) {
+            const item = await Item.findOne({
+                where: {
+                    id: parsedItemId,
+                },
+            });
+            await item.update({ sold: true, orderId: req.params.id });
+            res.json({ order });
+        } else {
+            next(orderNotFoundError(req.params.id));
+        }
     })
 );
 
