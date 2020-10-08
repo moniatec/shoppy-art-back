@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const checkJwt = require("../authO").checkJwt;
 const { check } = require("express-validator");
 const { asyncHandler, handleValidationErrors } = require("../utils");
 const { getUserToken, requireAuth } = require("../auth");
@@ -22,7 +23,8 @@ const validateEmailAndPassword = [
 //get user wiht id
 router.get(
     "/:id",
-    requireAuth,
+    // requireAuth,
+    checkJwt,
     asyncHandler(async (req, res, next) => {
         const userId = parseInt(req.params.id, 10);
         const user = await User.findByPk(userId);

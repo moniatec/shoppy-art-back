@@ -93,7 +93,7 @@ router.post(
     })
 );
 
-//edit item(sold) with id passed on params
+//edit order(add item) 
 router.put(
     "/:id",
 
