@@ -19,7 +19,7 @@ const checkJwt = jwt({
     }),
 
     // Validate the audience and the issuer.
-    audience: 'YOUR_API_IDENTIFIER',
+    audience: 'https://shoppy-art',
     issuer: `https://dev--uok3ilo.us.auth0.com/`,
     algorithms: ['RS256']
 });

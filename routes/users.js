@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const checkJwt = require("../authO").checkJwt;
+const checkJwt = require("../auth0").checkJwt;
 const { check } = require("express-validator");
 const { asyncHandler, handleValidationErrors } = require("../utils");
 // const { getUserToken, requireAuth } = require("../auth");
@@ -25,7 +25,6 @@ const validateEmailAndPassword = [
 router.get(
     "/:id",
     // requireAuth,
-    checkJwt,
     asyncHandler(async (req, res, next) => {
         const userId = parseInt(req.params.id, 10);
         const user = await User.findByPk(userId);
