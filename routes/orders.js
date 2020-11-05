@@ -77,10 +77,11 @@ router.get(
 router.post(
     "/",
     asyncHandler(async (req, res) => {
-        const { userId, itemId } = req.body;
+        const { userId, itemId, total } = req.body;
         const parsedUserId = await parseInt(userId, 10);
         const parsedItemId = await parseInt(itemId, 10);
-        const order = await Order.create({ userId: parsedUserId });
+        const parsedTotal = await parseInt(total, 10);
+        const order = await Order.create({ userId: parsedUserId, total: parsedTotal });
 
         const item = await Item.findOne({
             where: {

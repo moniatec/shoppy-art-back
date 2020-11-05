@@ -7,7 +7,7 @@ const { asyncHandler, handleValidationErrors } = require("../utils");
 
 const router = express.Router();
 const db = require("../db/models");
-
+const { Op } = require("sequelize");
 const { User, Item, Order } = db;
 
 const validateEmailAndPassword = [
@@ -27,7 +27,11 @@ router.get(
     // requireAuth,
     asyncHandler(async (req, res, next) => {
         const userId = parseInt(req.params.id, 10);
-        const user = await User.findByPk(userId);
+        const user = await User.findOne({
+            where: {
+                id: req.params.id,
+            },
+        });
         res.json({ user });
     })
 );
