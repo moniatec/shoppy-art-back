@@ -87,7 +87,7 @@ router.delete(
             await item.destroy();
             res.json({ message: `Deleted item with id of ${req.params.id}.` });
         } else {
-            next(eventNotFoundError(req.params.id));
+            next(itemNotFoundError(req.params.id));
         }
     })
 );

@@ -99,8 +99,9 @@ router.put(
     "/:id",
 
     asyncHandler(async (req, res, next) => {
-        const { itemId } = req.body;
+        const { itemId, newTotal } = req.body;
         const parsedItemId = await parseInt(itemId, 10);
+        const parsedTotal = await parseInt(newTotal, 10);
         const order = await Order.findOne({
             where: {
                 id: req.params.id,
@@ -113,7 +114,13 @@ router.put(
                     id: parsedItemId,
                 },
             });
-            await item.update({ sold: true, orderId: req.params.id });
+            if (item.sold === true) {
+                await item.update({ sold: false, orderId: null });
+            } else {
+                await item.update({ sold: true, orderId: req.params.id });
+
+            }
+            await order.update({ total: parsedTotal });
             res.json({ order });
         } else {
             next(orderNotFoundError(req.params.id));
@@ -133,6 +140,12 @@ router.delete(
         });
 
         if (order) {
+            const items = await Item.findAll({
+                where: {
+                    orderId: req.params.id,
+                },
+            });
+            await items.update({ sold: false, orderId: null });
             await order.destroy();
             res.json({ message: `Deleted order with id of ${req.params.id}.` });
         } else {
