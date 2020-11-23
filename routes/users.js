@@ -10,15 +10,11 @@ const db = require("../db/models");
 const { Op } = require("sequelize");
 const { User, Item, Order } = db;
 
-const validateEmailAndPassword = [
+const validateEmail = [
     check("email")
         .exists({ checkFalsy: true })
         .isEmail()
         .withMessage("Please provide a valid email."),
-    check("password")
-        .exists({ checkFalsy: true })
-        .withMessage("Please provide a password."),
-    handleValidationErrors,
 ];
 
 //get user wiht id
@@ -42,11 +38,11 @@ router.post(
     check("username")
         .exists({ checkFalsy: true })
         .withMessage("Please provide a username"),
-    validateEmailAndPassword,
+    validateEmail,
     asyncHandler(async (req, res) => {
-        const { username, email, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, email, hashedPassword });
+        const { username, email } = req.body;
+
+        const user = await User.create({ username, email });
 
         const token = getUserToken(user);
         res.status(201).json({
@@ -59,9 +55,9 @@ router.post(
 
 router.post(
     "/token",
-    validateEmailAndPassword,
+    validateEmail,
     asyncHandler(async (req, res, next) => {
-        const { email, password, username } = req.body;
+        const { email, username } = req.body;
         const user = await User.findOne({
             where: {
                 email,
@@ -69,7 +65,7 @@ router.post(
             },
         });
 
-        if (!user || !user.validatePassword(password)) {
+        if (!user) {
 
             const err = new Error("Login failed");
             err.status = 401;
