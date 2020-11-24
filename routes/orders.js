@@ -101,7 +101,6 @@ router.put(
     asyncHandler(async (req, res, next) => {
         const { itemId, newTotal } = req.body;
         const parsedItemId = await parseInt(itemId, 10);
-        const parsedTotal = await parseInt(newTotal, 10);
         const order = await Order.findOne({
             where: {
                 id: req.params.id,
@@ -120,7 +119,7 @@ router.put(
                 await item.update({ sold: true, orderId: req.params.id });
 
             }
-            await order.update({ total: parsedTotal });
+            // await order.update({ total: parsedTotal });
             res.json({ order });
         } else {
             next(orderNotFoundError(req.params.id));
