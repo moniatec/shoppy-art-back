@@ -45,10 +45,14 @@ router.post(
         const user = await User.create({ username, email });
 
         const token = getUserToken(user);
+        // res.status(201).json({
+        //     user: { id: user.id },
+        //     token,
+        //     currentUserId: user.id,
+        // });
         res.status(201).json({
             user: { id: user.id },
             token,
-            currentUserId: user.id,
         });
     })
 );
